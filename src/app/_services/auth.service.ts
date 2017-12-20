@@ -4,11 +4,14 @@ import "rxjs/add/operator/map";
 import "rxjs/add/operator/catch";
 import "rxjs/add/observable/throw";
 import { Observable } from "rxjs/Observable";
+import { tokenNotExpired, JwtHelper } from "angular2-jwt";
 
 @Injectable()
 export class AuthService {
+  private static LOCAL_STORAGE_TOKEN = "token";
   baseUrl = "http://localhost:5000/api/auth/";
-  userToken: any;
+  // userToken: any;
+  jwtHelper: JwtHelper = new JwtHelper();
 
   constructor(private http: Http) {}
 
@@ -18,8 +21,11 @@ export class AuthService {
       .map((response: Response) => {
         const user = response.json();
         if (user) {
-          localStorage.setItem("token", user.tokenString);
-          this.userToken = user.tokenString;
+          localStorage.setItem(
+            AuthService.LOCAL_STORAGE_TOKEN,
+            user.tokenString
+          );
+          // this.userToken = user.tokenString;
         }
       })
       .catch(this.handleError);
@@ -31,12 +37,26 @@ export class AuthService {
       .catch(this.handleError);
   }
 
+  loggedIn() {
+    return tokenNotExpired("token");
+  }
+
+  loggedInUser(): string {
+    const token = localStorage.getItem(AuthService.LOCAL_STORAGE_TOKEN);
+    if (token) return this.jwtHelper.decodeToken(token).unique_name;
+    return "";
+  }
+
   private get requestOptions() {
     const headers = new Headers({ "Content-type": "application/json" });
     return new RequestOptions({ headers: headers });
   }
 
   private handleError(error: any) {
+    if (error.status === 401) {
+      return Observable.throw("Unauthorzied user");
+    }
+
     const applicationError = error.headers.get("Application-Error");
     if (applicationError) {
       return Observable.throw(applicationError);
@@ -50,6 +70,7 @@ export class AuthService {
         }
       }
     }
+    console.log("Mode state errors", modelStateErrors);
     return Observable.throw(modelStateErrors || "Server error");
   }
 }
