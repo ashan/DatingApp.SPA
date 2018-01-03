@@ -1,8 +1,7 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-
-  <div class="container">
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
     <div class="navbar-header">
-        <a class="navbar-brand" href="#">Dating App</a>
+      <a class="navbar-brand" [routerLink]="['/home']">Dating App</a>
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false"
         aria-controls="navbar">
         <span class="sr-only">Toggle navigation</span>
@@ -10,12 +9,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      
+
     </div>
 
 
 
-    <div id="navbar" class="navbar-collapse collapse">
+    <div id="navbar">
       <div *ngIf="!loggedIn">
         <form #loginForm="ngForm" class="navbar-form navbar-right" (ngSubmit)="login()">
           <div class="form-group">
@@ -24,7 +23,7 @@
           <div class="form-group">
             <input type="password" placeholder="Password" class="form-control" required name="password" [(ngModel)]="model.password">
           </div>
-          <button type="submit" class="btn btn-success" [disabled]="!loginForm.valid">Sign in</button>
+          <button type="submit" class="btn btn-default" [disabled]="!loginForm.valid">Sign in</button>
         </form>
       </div>
 
@@ -32,19 +31,19 @@
 
       <div *ngIf="loggedIn">
         <ul class="nav navbar-nav">
-          <li>
-            <a href="#">Matches</a>
+          <li routerLinkActive="active">
+            <a [routerLink]="['/members']">Matches</a>
           </li>
-          <li>
-            <a href="#">Lists</a>
+          <li routerLinkActive="active">
+            <a [routerLink]="['/lists']">Lists</a>
           </li>
-          <li>
-            <a href="#">Messages</a>
+          <li routerLinkActive="active">
+            <a [routerLink]="['/messages']">Messages</a>
           </li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
           <li class="dropdown" dropdown>
-            <a href="#" class="dropdown-toggle" dropdownToggle>
+            <a class="dropdown-toggle" dropdownToggle>
               Welcome {{loggedInUser | titlecase}}
               <span class="caret"></span>
             </a>
@@ -57,7 +56,7 @@
               </li>
               <li role="separator" class="divider"></li>
               <li>
-                <a href="#" (click)="logout()">
+                <a (click)="logout()">
                   <i class="fa fa-sign-out"></i>
                   Logout
                 </a>
