@@ -10,7 +10,7 @@ import { tokenNotExpired, JwtHelper } from "angular2-jwt";
 export class AuthService {
   private static LOCAL_STORAGE_TOKEN = "token";
   baseUrl = "http://localhost:5000/api/auth/";
-  // userToken: any;
+  decodedToken: any;
   jwtHelper: JwtHelper = new JwtHelper();
 
   constructor(private http: Http) {}
@@ -20,11 +20,12 @@ export class AuthService {
       .post(this.baseUrl + "login", model, this.requestOptions)
       .map((response: Response) => {
         const user = response.json();
-        if (user) {
+        if (user && user.tokenString) {
           localStorage.setItem(
             AuthService.LOCAL_STORAGE_TOKEN,
             user.tokenString
           );
+          this.decodedToken = this.jwtHelper.decodeToken(user.tokenString);
           // this.userToken = user.tokenString;
         }
       })
@@ -43,7 +44,10 @@ export class AuthService {
 
   loggedInUser(): string {
     const token = localStorage.getItem(AuthService.LOCAL_STORAGE_TOKEN);
-    if (token) return this.jwtHelper.decodeToken(token).unique_name;
+    if (token) {
+      this.decodedToken = this.jwtHelper.decodeToken(token);
+      return this.decodedToken.unique_name;
+    }
     return "";
   }
 

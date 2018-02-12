@@ -28,6 +28,12 @@ export class UserService {
       .catch(this.handleError);
   }
 
+  updateUser(id: number, user: User): Observable<Response> {
+    return this.authHttp
+      .put(this.baseUrl + "users/" + id, user)
+      .catch(this.handleError);
+  }
+
   //----- private methods -------//
   private handleError(error: any) {
     if (error.status === 401) {
