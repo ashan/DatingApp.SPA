@@ -1,3 +1,4 @@
+import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
 import { MemberEditResolver } from "./_resolvers/member-edit.resolver";
 import { MemberListResolver } from "./_resolvers/member-list.resolver";
 import { MemberDetailResolver } from "./_resolvers/member-detail.resolver";
@@ -40,7 +41,8 @@ import { PreventUnsavedChanges } from "./_guards/prevent-unsaved-changes.guard";
     ListsComponent,
     MessagesComponent,
     MemberDetailsComponent,
-    MemberEditComponent
+    MemberEditComponent,
+    PhotoEditorComponent
   ],
   imports: [
     BrowserModule,
